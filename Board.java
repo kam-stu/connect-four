@@ -20,6 +20,7 @@ public class Board {
     }
     
     public void printBoard(){
+        System.out.println();
         for(int row = 0; row < board.length; row++){
             for(int col = 0; col < board[row].length; col++){
                 System.out.print(board[row][col] + " ");
@@ -59,6 +60,14 @@ public class Board {
             System.out.println("Enter a valid column.");
             return false;
         }
+
+        // Checks if given column is full
+        // Checks the top value of the given colum
+        if(board[0][col-1] != '_'){
+            System.out.println("Given column is full.  Pick another column.");
+            return false;
+        }
+        
         return true;
     }
 
@@ -66,6 +75,27 @@ public class Board {
     // Values can be next to each other horizontally, vertically, or diagonally
     // Returns the value 
     public String checkWin(){
+        // Check horizontal
+        for (int row = 0; row < board.length ; row++){
+            for(int col = 0; col < board[row].length - 3; col++){
+                if(board[row][col] == 'x' && 
+                board[row][col + 1] == 'x' &&
+                board[row][col + 2] == 'x' && 
+                board[row][col+3] == 'x')
+                    return "X Wins!";
+            }
+        }
+
+        // Check vertically
+        for(int col = 0; col < board[0].length; col++){
+            for (int row = 0; row < board.length - 3; row++){
+                if(board[row][col] == 'x' &&
+                board[row + 1][col] == 'x' &&
+                board[row + 2][col] == 'x'&&
+                board[row + 3][col] == 'x')
+                    return "X Wins!";
+            }
+        }
         return "None";  // If no winner is found
     }
 
