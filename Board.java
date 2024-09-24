@@ -1,14 +1,16 @@
 public class Board {
     private int rows;
     private int columns;
-    public char[][] board;
-    private boolean isDraw;
+    private char[][] board;
+    public char playerVal; 
+    public boolean gameOver;
 
     public Board(){
         this.rows = 6;
         this.columns = 7;
         this.board = new char[rows][columns];
-        this.isDraw = false;
+        this.playerVal = 'x';
+        this.gameOver = false;
     }
     
     public void initBoard(){
@@ -31,11 +33,11 @@ public class Board {
 
     // Changes the lowest point in the column to value
     // Off-by-one error for col parameter
-    public void changeVal(int col, char value){
+    public void changeVal(int col){
         // Start from the bottom of the board and go up
         for(int row = board.length - 1; row >= 0; row--){
             if(board[row][col - 1] == '_'){
-                board[row][col - 1] = value;
+                board[row][col - 1] = playerVal;
                 return;
             }
         }
@@ -65,6 +67,7 @@ public class Board {
         // Checks the top value of the given colum
         if(board[0][col-1] != '_'){
             System.out.println("Given column is full.  Pick another column.");
+            printBoard();
             return false;
         }
         
@@ -74,38 +77,62 @@ public class Board {
     // Checks to see if 4 of the same values are next to each other in the array
     // Values can be next to each other horizontally, vertically, or diagonally
     // Returns the value 
-    public String checkWin(){
+    public boolean isWin(){
         // Check horizontal
         for (int row = 0; row < board.length ; row++){
             for(int col = 0; col < board[row].length - 3; col++){
-                if(board[row][col] == 'x' && 
-                board[row][col + 1] == 'x' &&
-                board[row][col + 2] == 'x' && 
-                board[row][col+3] == 'x')
-                    return "X Wins!";
+                if(board[row][col] == playerVal && 
+                board[row][col + 1] == playerVal &&
+                board[row][col + 2] == playerVal && 
+                board[row][col+3] == playerVal)
+                    return true;
             }
         }
 
         // Check vertically
         for(int col = 0; col < board[0].length; col++){
             for (int row = 0; row < board.length - 3; row++){
-                if(board[row][col] == 'x' &&
-                board[row + 1][col] == 'x' &&
-                board[row + 2][col] == 'x'&&
-                board[row + 3][col] == 'x')
-                    return "X Wins!";
+                if(board[row][col] == playerVal &&
+                board[row + 1][col] == playerVal &&
+                board[row + 2][col] == playerVal &&
+                board[row + 3][col] == playerVal)
+                    return true;
             }
         }
-        return "None";  // If no winner is found
+        return false;  // If no winner is found
     }
 
-    // Returns the winner or Draw
-    public String getWinner(){
-        return "Draw";
+    // Checks whether there is a win or draw
+    public void getWinner(){
+        if(isWin()){
+            printBoard();
+            System.out.println(playerVal + " wins!");
+            gameOver = true;
+            return;
+        }
+        
+        if(isFull()){
+            printBoard();
+            System.out.println("It's a draw!");
+            gameOver = true;
+            return;
+        }
     }
 
-    // Changes the "player" or x/o value
-    public void switchPlayer(){}
+    // Switches between 'x' and 'o' so 2 players can play with each other
+    public void switchPlayer(){
+        if(playerVal == 'x')
+            playerVal = 'o';
+        else
+            playerVal = 'x';
+        
+    }
 
-
+    // resets the gamestate
+    //clears board and changes game over to false
+    public void resetGame(){
+        initBoard();
+        gameOver = false;
+    }
 }
+
